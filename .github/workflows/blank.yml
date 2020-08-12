@@ -1,0 +1,39 @@
+name: 'Build'
+
+on: push
+
+jobs:
+  build:
+    name: 'Extension'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: 'Configure JDK 1.8'
+        uses: actions/setup-java@v1
+        with:
+          java-version: 8
+      - name: 'Verifying Submodules'
+        uses: textbook/git-checkout-submodule-action@master
+      - name: 'Installing Dependencies'
+        run: sudo apt update && sudo apt-get install -y libc6-i386 lib32z1 lib32stdc++6
+      - name: 'Cleaning ANT'
+        run:  ant clean
+      - name: 'Build Extension'
+        run: ant extensions -Dproguard=1
+      - name: 'Saving PaytmPayment'
+        uses: actions/upload-artifact@v1.0.0
+        with:
+          name: com.vkpdeveloper.PaytmPayment.aix
+          path: out/com.vkpdeveloper.PaytmPayment.aix
+      - name: 'Saving PaypalGateway'
+        uses: actions/upload-artifact@v1.0.0
+        with:
+          name: com.vkpdeveloper.PaypalGateway.aix
+          path: out/com.vkpdeveloper.PaypalGateway.aix
+      - name: 'Saving SocketIO'
+        uses: actions/upload-artifact@v1.0.0
+        with:
+          name: com.vkpdeveloper.VKPSocketIO.aix
+          path: out/com.vkpdeveloper.VKPSocketIO.aix
+        
+          
